@@ -23,6 +23,7 @@ ReturnData __cdecl getProcessPath() {
 }
 
 ReturnData __cdecl getMinElemenInRange(int min, int max) {
+	ReturnCode returnCode = ReturnCode::Fail;
 	// init with a out of range value, it is asumming for cases of error
 	int val = max + 1;
 
@@ -49,6 +50,7 @@ ReturnData __cdecl getMinElemenInRange(int min, int max) {
 				if (delta_min > elm - min) {
 					delta_min = elm - min;
 				}
+				returnCode = ReturnCode::Success;
 			}
 		}
 
@@ -58,6 +60,7 @@ ReturnData __cdecl getMinElemenInRange(int min, int max) {
 	ReturnData returnData;
 	returnData.sizeOfCustomData = 0;
 	returnData.customData = (char*)(size_t)val;
+	returnData.returnCode =(int)returnCode;
 
 	return returnData;
 }

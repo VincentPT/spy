@@ -22,8 +22,8 @@ public:
 
 class SpyClient;
 
-template <class T, class ...Args>
-int readCustomObject(SpyClient* spyClient, CustomCommandId customCmdId, const std::function<void(T&)>& handler, Args...args) {
+template <class ...Args>
+int executeCommandAndFreeCustomData(SpyClient* spyClient, CustomCommandId customCmdId, const std::function<void(ReturnData&)>& handler, Args...args) {
 	constexpr int nParam = sizeof...(args);
 	constexpr size_t paramSize = nParam * sizeof(void*);
 	char commandRaw[sizeof(CustomCommandCmdData) + paramSize - sizeof(CustomCommandCmdData::params)];
@@ -50,25 +50,28 @@ int readCustomObject(SpyClient* spyClient, CustomCommandId customCmdId, const st
 		return invokeResult;
 	}
 
-	T rawData;
-	iRes = spyClient->readCustomCommandResult(&returnData, (void**)&rawData);
+	ReturnData localReturnData = returnData;
+
+	iRes = spyClient->readCustomCommandResult(&returnData, (void**)&localReturnData.customData);
 	if (iRes != 0) {
 		return iRes;
 	}
 
-	handler(rawData);
+	handler(localReturnData);
 
-	if (rawData != nullptr) {
-		free(rawData);
+	// free customData in local process
+	if (localReturnData.customData != nullptr) {
+		free(localReturnData.customData);
 	}
 
+	// free customData in remote process
 	int freeBufferRes = spyClient->freeCustomCommandResult(&returnData);
 	return iRes;
 }
 
 
-template <class T, class ...Args>
-int readCustomObject2(SpyClient* spyClient, CustomCommandId customCmdId, const std::function<void(T&)>& handler, Args...args) {
+template <class ...Args>
+int executeCommand(SpyClient* spyClient, CustomCommandId customCmdId, const std::function<void(ReturnData&)>& handler, Args...args) {
 	constexpr int nParam = sizeof...(args);
 	constexpr size_t paramSize = nParam * sizeof(void*);
 	char commandRaw[sizeof(CustomCommandCmdData) + paramSize - sizeof(CustomCommandCmdData::params)];
@@ -94,8 +97,6 @@ int readCustomObject2(SpyClient* spyClient, CustomCommandId customCmdId, const s
 	if (invokeResult != 0) {
 		return invokeResult;
 	}
-
-	T raw = (T)(size_t)returnData.customData;
-	handler(raw);
+	handler(returnData);
 	return iRes;
 }

@@ -104,25 +104,27 @@ bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
 
 string UserSpyClient::getInjectedProcessPath() {
 	string res;
-	auto handler = [&res](char*& buffer) {
-		res = buffer;
+	auto handler = [&res](ReturnData& returnData) {
+		res = returnData.customData;
 	};
 
 	auto it = _dynamicCmdIdMap.find(GetProcessPath);
 	if (it != _dynamicCmdIdMap.end()) {
-		readCustomObject<char*>(this, it->second, handler);
+		executeCommandAndFreeCustomData(this, it->second, handler);
 	}
 	return res;
 }
 
 int UserSpyClient::getMinElmInRange(int min, int max) {
 	int res = max + 1;
-	auto handler = [&res](int& val) {
-		res = val;
+	auto handler = [&res](ReturnData& returnData) {
+		if (returnData.returnCode == (int)ReturnCode::Success) {
+			res = (int)(size_t)(returnData.customData);
+		}
 	};
 	auto it = _dynamicCmdIdMap.find(GetMinElemenInRange);
 	if (it != _dynamicCmdIdMap.end()) {
-		readCustomObject2<int>(this, it->second, handler, min, max);
+		executeCommand(this, it->second, handler, min, max);
 	}
 	
 	return res;

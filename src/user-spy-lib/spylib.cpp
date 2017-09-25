@@ -25,6 +25,7 @@ extern "C" {
 	}
 
 	SPYLIB_API ReturnData __cdecl getMinElemenInRange(int min, int max) {
+		ReturnCode returnCode = ReturnCode::Fail;
 		// init with a out of range value, it is asumming for cases of error
 		int val = max + 1;
 
@@ -51,6 +52,7 @@ extern "C" {
 					if (delta_min > elm - min) {
 						delta_min = elm - min;
 					}
+					returnCode = ReturnCode::Success;
 				}
 			}
 
@@ -60,6 +62,7 @@ extern "C" {
 		ReturnData returnData;
 		returnData.sizeOfCustomData = 0;
 		returnData.customData = (char*)(size_t)val;
+		returnData.returnCode = (int)returnCode;
 
 		return returnData;
 	}

@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.2)
-project(spy-engine C CXX)
+project(spy-engine-1.0 C CXX)
 
 SET (SOURCES 
     CustomCommandInvoker.cpp

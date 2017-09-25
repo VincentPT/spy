@@ -41,18 +41,20 @@ bool UserSpyClient::inject(const char* processName) {
 
 string UserSpyClient::getInjectedProcessPath() {
 	string res;
-	auto handler = [&res](char*& buffer) {
-		res = buffer;
+	auto handler = [&res](ReturnData& returnData) {
+		res = returnData.customData;
 	};
-	readCustomObject<char*>(this, (CustomCommandId)UserCommandId::GetInjectedProcessName + _predefinedBase, handler);
+	executeCommandAndFreeCustomData(this, (CustomCommandId)UserCommandId::GetInjectedProcessName + _predefinedBase, handler);
 	return res;
 }
 
 int UserSpyClient::getMinElmInRange(int min, int max) {
 	int res = max + 1;
-	auto handler = [&res](int& val) {
-		res = val;
+	auto handler = [&res](ReturnData& returnData) {
+		if (returnData.returnCode == (int)ReturnCode::Success) {
+			res = (int)(size_t)(returnData.customData);
+		}
 	};
-	readCustomObject2<int>(this, (CustomCommandId)UserCommandId::GetMinElmInRange + _predefinedBase, handler, min, max);
+	executeCommand(this, (CustomCommandId)UserCommandId::GetMinElmInRange + _predefinedBase, handler, min, max);
 	return res;
 }

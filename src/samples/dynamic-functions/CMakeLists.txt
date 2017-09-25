@@ -25,9 +25,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/.
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../user-spy-lib)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../spy)
 
-add_dependencies(user-spy-lib spy-engine)
+add_dependencies(user-spy-lib spy-engine-1.0)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/spy/$<CONFIGURATION>/spy-engine.dll ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/spy/$<CONFIGURATION>/spy-engine-1.0.dll ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/user-spy-lib/$<CONFIGURATION>/user-spy-lib.dll ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/)
 
 SET (INSTALL_DEST ${CMAKE_BINARY_DIR}/bin)

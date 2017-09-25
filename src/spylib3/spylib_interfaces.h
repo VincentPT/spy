@@ -10,6 +10,12 @@ enum class UserCommandId : unsigned short {
 	PredefinedCommandCount
 };
 
+enum class ReturnCode : int {
+	Success = 0,
+	Fail
+};
+
+
 // user structure's declaration
 struct RawBuffer {
 	unsigned int size;

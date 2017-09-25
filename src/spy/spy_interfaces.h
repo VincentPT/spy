@@ -15,6 +15,7 @@ typedef unsigned short CustomCommandId;
 struct ReturnData {
 	char* customData;
 	int sizeOfCustomData;
+	int returnCode; // user return code, defined by user
 };
 
 struct BaseCmdData {
@@ -64,7 +65,7 @@ struct CustomCommandCmdData {
 #pragma pack(pop)
 
 #define EMPTY_RETURN_DATA() {nullptr, 0}
-#define SPY_ROOT_DLL_NAME "spy-engine.dll"
+#define SPY_ROOT_DLL_NAME "spy-engine-1.0.dll"
 
 /**
 *   brief an function interface that will be executed in spy engine, when a spy app send command LOAD_PREDEFINED_FUNCTIONS to the engine

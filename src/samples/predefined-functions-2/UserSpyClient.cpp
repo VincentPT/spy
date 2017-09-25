@@ -42,18 +42,18 @@ bool UserSpyClient::inject(const char* processName) {
 
 string UserSpyClient::getInjectedProcessPath() {
 	string res;
-	auto handler = [&res](char*& buffer) {
-		res = buffer;
+	auto handler = [&res](ReturnData& returnData) {
+		res = returnData.customData;
 	};
-	readCustomObject<char*>(this, (CustomCommandId)UserCommandId::GetInjectedProcessName + _predefinedBase, handler);
+	executeCommandAndFreeCustomData(this, (CustomCommandId)UserCommandId::GetInjectedProcessName + _predefinedBase, handler);
 	return res;
 }
 
 bool UserSpyClient::readDummyTree(void* address, std::string& result) {
-	auto handler = [&result](char*& buffer) {
-		result = buffer;
+	auto handler = [&result](ReturnData& returnData) {
+		result = returnData.customData;
 	};
-	int iRes = readCustomObject<char*>(this, (CustomCommandId)UserCommandId::ReadDummyTree + _predefinedBase, handler, (void*)nullptr);
+	int iRes = executeCommandAndFreeCustomData(this, (CustomCommandId)UserCommandId::ReadDummyTree + _predefinedBase, handler, (void*)nullptr);
 	if (iRes) {
 		cout << "Error: command ReadDummyTree return error!" << endl;
 	}
