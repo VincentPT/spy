@@ -13,7 +13,7 @@ public:
 
 	void setPredefinedCommandIdBase(int predefinedBase);
 
-	bool startMonitorProcess(const char* processName);
+	bool inject(const char* processName);
 	std::string getInjectedProcessPath();
 	int getMinElmInRange(int min, int max);
 };

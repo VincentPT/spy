@@ -13,7 +13,7 @@ public:
 	UserSpyClient();
 	~UserSpyClient();
 
-	bool startMonitorProcess(const char* processName);
+	bool inject(const char* processName);
 	bool loadDynamicFunctions(const char* dllFile);
 	bool unloadModulesAndStopMonitor();
 

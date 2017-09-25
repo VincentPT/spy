@@ -9,5 +9,5 @@ public:
 	UserSpyClient();
 	~UserSpyClient();
 
-	bool startMonitorProcess(const char* processName);
+	bool inject(const char* processName);
 };

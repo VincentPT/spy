@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	// spy the target process
 	const char* remoteProcessName = argv[1];
 	UserSpyClient spyClient;
-	if (spyClient.startMonitorProcess(remoteProcessName) == false) {
+	if (spyClient.inject(remoteProcessName) == false) {
 		cout << " failed to start monitor for process " << remoteProcessName << endl;
 		return -1;
 	}
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// stop the monitor target process and also uninject spy engine dll from the process
-	if (!spyClient.stopMonitorProcess()) {
+	if (!spyClient.uninject()) {
 		cout << "failed to stop monitor for process " << argv[1] << endl;
 	}
 	else {

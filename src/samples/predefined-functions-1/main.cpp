@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	UserSpyClient spyClient;
-	if (spyClient.startMonitorProcess(argv[1]) == false) {
+	if (spyClient.inject(argv[1]) == false) {
 		cout << " failed to start monitor for process " << argv[1] << endl;
 		return -1;
 	}
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 		cout << "failed to uninject spylib.dll" << endl;
 	}
 
-	if (!spyClient.stopMonitorProcess()) {
+	if (!spyClient.uninject()) {
 		cout << "failed to stop monitor for process " << argv[1] << endl;
 	}
 

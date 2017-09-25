@@ -13,7 +13,7 @@ public:
 
 	void setPredefinedCommandIdBase(int predefinedBase);
 
-	bool startMonitorProcess(const char* processName);
+	bool inject(const char* processName);
 	std::string getInjectedProcessPath();
 	bool readDummyTree(void* address, std::string& result);
 };

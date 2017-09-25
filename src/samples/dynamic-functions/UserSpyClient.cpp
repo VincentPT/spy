@@ -18,7 +18,7 @@ UserSpyClient::UserSpyClient() {
 UserSpyClient::~UserSpyClient() {
 }
 
-bool UserSpyClient::startMonitorProcess(const char* processName) {
+bool UserSpyClient::inject(const char* processName) {
 	auto hCurrentProcessBase = GetModuleHandleA(NULL);
 	string currentProcesssFilePath(256, ' ');
 
@@ -35,7 +35,7 @@ bool UserSpyClient::startMonitorProcess(const char* processName) {
 	list<string> dependencies = {
 	};
 
-	bool blRes = SpyClient::startMonitorProcess(processName, rootSpyPath, dependencies);
+	bool blRes = SpyClient::inject(processName, rootSpyPath, dependencies);
 	return blRes;
 }
 
@@ -50,7 +50,7 @@ bool UserSpyClient::unloadModulesAndStopMonitor() {
 			cout << "uninjected module from remote process " << elm.first << endl;
 		}
 	}
-	if (!stopMonitorProcess()) {
+	if (!uninject()) {
 		cout << "failed to stop monitor for process " << getProcessName() << endl;
 	}
 	else {
@@ -79,7 +79,7 @@ bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
 	HMODULE module;
 	list<CustomCommandId> cmdIds;
 
-	int iRes = loadCustomDynamicFunctions(dllFile, functions, functionCount, cmdIds, &module);
+	int iRes = SpyClient::loadDynamicFunctions(dllFile, functions, functionCount, cmdIds, &module);
 	if (iRes) {
 		cout << "Cannot load functions in dll file " << dllFile << endl;
 		return false;
@@ -89,7 +89,7 @@ bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
 	_spyLibMap[dllFile] = module;
 
 	if (cmdIds.size() != (size_t)functionCount) {
-		cout << "number of command return by loadCustomDynamicFunctions is mismatch with number of function" << dllFile << endl;
+		cout << "number of command return by loadDynamicFunctions is mismatch with number of function" << dllFile << endl;
 		return false;
 	}
 

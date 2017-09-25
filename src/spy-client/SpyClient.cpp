@@ -107,7 +107,7 @@ std::string SpyClient::getModuleName(const std::string& dllPath) {
 #endif //_WIN32
 }
 
-bool SpyClient::startMonitorProcess(const char* processName, const std::string& rootDllPath, const std::list<std::string>& dependencyDllPaths) {
+bool SpyClient::inject(const char* processName, const std::string& rootDllPath, const std::list<std::string>& dependencyDllPaths) {
 	_processName = processName;
 
 	_dwProcessId = getProcessByName(processName);
@@ -165,7 +165,7 @@ bool SpyClient::startMonitorProcess(const char* processName, const std::string& 
 	return true;
 }
 
-bool SpyClient::stopMonitorProcess() {
+bool SpyClient::uninject() {
 	if (_hTargetProcess == NULL) {
 		return false;
 	}
@@ -191,8 +191,8 @@ bool SpyClient::stopMonitorProcess() {
 	return res != FALSE;
 }
 
-bool SpyClient::restartMonitorProcess() {
-	return startMonitorProcess(_processName.c_str(), _rootSpyDllPath, _dependencyDllPaths);
+bool SpyClient::reinject() {
+	return inject(_processName.c_str(), _rootSpyDllPath, _dependencyDllPaths);
 }
 
 bool SpyClient::checkTargetAvaible() {
@@ -418,7 +418,7 @@ int SpyClient::loadPredefinedFunctions(const char* dllFile, HMODULE* phModule) {
 	return (int)functionReturnVal;
 }
 
-int SpyClient::loadCustomDynamicFunctions(const char* dllFile, const char* functions[], int functionCount, list<CustomCommandId>& loadedCustomFunctions, HMODULE* phModule) {
+int SpyClient::loadDynamicFunctions(const char* dllFile, const char* functions[], int functionCount, list<CustomCommandId>& loadedCustomFunctions, HMODULE* phModule) {
 	size_t totalSize = 0;
 	size_t size;
 
@@ -449,13 +449,13 @@ int SpyClient::loadCustomDynamicFunctions(const char* dllFile, const char* funct
 
 	// call load custom functions in remote thread
 	int iRes = sendCommandToRemoteThread((BaseCmdData*)&loadCustomFunctionCmdData, true);
+	if (returnData.sizeOfCustomData != sizeof(HMODULE) + functionCount * sizeof(CustomCommandId)) {
+		cout << "return data by load custom function is not correct" << std::endl;
+		return -1;
 	if (iRes != 0) {
 		return iRes;
 	}
 	// check the return data size
-	if (returnData.sizeOfCustomData != sizeof(HMODULE) + functionCount * sizeof(CustomCommandId)) {
-		cout << "return data by load custom function is not correct" << std::endl;
-		return -1;
 	}
 
 	char* rawData;

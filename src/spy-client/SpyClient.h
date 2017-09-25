@@ -22,9 +22,9 @@ public:
 	static HMODULE getModuleByName(DWORD th32ProcessID, const char* moduleName, std::string& modulePath);
 	static std::string getModuleName(const std::string& dllPath);
 
-	bool startMonitorProcess(const char* processName, const std::string& rootDllPath, const std::list<std::string>& dependencyDllPaths);
-	bool stopMonitorProcess();
-	bool restartMonitorProcess();
+	bool inject(const char* processName, const std::string& rootDllPath, const std::list<std::string>& dependencyDllPaths);
+	bool uninject();
+	bool reinject();
 	bool checkTargetAvaible();
 	HMODULE injectDLL(const std::string& dllPath);
 
@@ -39,6 +39,6 @@ public:
 	// return -1 if failed,
 	// incase success, hi word word is number of loadded command, low word is command id base for the predefined command
 	int loadPredefinedFunctions(const char* dllFile, HMODULE* phModule = nullptr);
-	int loadCustomDynamicFunctions(const char* dllFile, const char* functions[], int functionCount, std::list<CustomCommandId>& loadedCustomFunctions, HMODULE* phModule = nullptr);
+	int loadDynamicFunctions(const char* dllFile, const char* functions[], int functionCount, std::list<CustomCommandId>& loadedCustomFunctions, HMODULE* phModule = nullptr);
 	int unloadModule(HMODULE hModule);
 };

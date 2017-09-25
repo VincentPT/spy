@@ -19,7 +19,7 @@ void UserSpyClient::setPredefinedCommandIdBase(int predefinedBase) {
 	_predefinedBase = (CustomCommandId)predefinedBase;
 }
 
-bool UserSpyClient::startMonitorProcess(const char* processName) {
+bool UserSpyClient::inject(const char* processName) {
 	auto hCurrentProcessBase = GetModuleHandleA(NULL);
 	string currentProcesssFilePath(256, ' ');
 
@@ -36,7 +36,7 @@ bool UserSpyClient::startMonitorProcess(const char* processName) {
 	list<string> dependencies = {
 	};
 
-	bool blRes = SpyClient::startMonitorProcess(processName, rootSpyPath, dependencies);
+	bool blRes = SpyClient::inject(processName, rootSpyPath, dependencies);
 	return blRes;
 }
 

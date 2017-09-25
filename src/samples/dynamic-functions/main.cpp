@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	// spy the target process
 	const char* remoteProcessName = argv[1];
 	UserSpyClient spyClient;
-	if (spyClient.startMonitorProcess(remoteProcessName) == false) {
+	if (spyClient.inject(remoteProcessName) == false) {
 		cout << " failed to start monitor for process " << remoteProcessName << endl;
 		return -1;
 	}
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 	// inject custom spy library by user spy client
 	// the functions is defined inside loadDynamicFunctions method
 	if (spyClient.loadDynamicFunctions(spyLib) == false) {
-		spyClient.stopMonitorProcess();
+		spyClient.uninject();
 		return -1;
 	}	
 
