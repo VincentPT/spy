@@ -24,7 +24,6 @@ using namespace std;
 extern int _runner_count;
 
 // global variables
-bool g_predefinedFuncLoaded = false;
 CustomFunctionManager customFunctionManager;
 
 // macro definition
@@ -106,12 +105,11 @@ int loadPredifnedFunctions(LoadPredefinedCmdData* param) {
 		cout << "Invalid custom command:" << (unsigned short)param->commandId << std::endl;
 		return -1;
 	}
-	if (g_predefinedFuncLoaded) {
-		cout << "predefined functions is already loaded" << std::endl;
-		return 1;
-	}
-	param->returnData.customData = nullptr;
-	param->returnData.sizeOfCustomData = 0;
+
+	ReturnData& returnData = param->returnData;
+
+	returnData.customData = nullptr;
+	returnData.sizeOfCustomData = 0;
 
 	char* dllFile = param->dllName;
 
@@ -156,10 +154,13 @@ int loadPredifnedFunctions(LoadPredefinedCmdData* param) {
 		cout << dllFile << " does not contain function " LoadPredefinedFunctionsName << std::endl;
 		return -1;
 	}
-
-	param->returnData.customData = (char*)hModule;
-	param->returnData.sizeOfCustomData = 0;
 	auto moduleInfo = customFunctionManager.createModuleContainer(hModule, dllFile);
+
+	returnData.sizeOfCustomData = sizeof(LoadPredefinedReturnData);
+	auto pLoadPredefinedReturnData = (LoadPredefinedReturnData*)malloc(returnData.sizeOfCustomData);
+	returnData.customData = (char*)pLoadPredefinedReturnData;
+	pLoadPredefinedReturnData->hModule = hModule;
+	pLoadPredefinedReturnData->moduleId = moduleInfo->moduleId;
 
 	int iNumberOfPredefinedFunction = GetPredefinedFunctionCount();
 	// check if there is no predefined functions need to be loaded
@@ -178,12 +179,10 @@ int loadPredifnedFunctions(LoadPredefinedCmdData* param) {
 	int iRes = LoadPredefinedFunctions(&context, (FSetPredefinedFunction)setCustomFunction, context.commandBase);
 	if (iRes != 0) {
 		// unload all loadded function of the module
-		customFunctionManager.unloadModule(hModule);
+		customFunctionManager.unloadModule(moduleInfo->moduleId);
 		cout << LoadPredefinedFunctionsName " return a cancelled value(" << iRes << "the loading result will be discard" << std::endl;		
 		return MAKE_RESULT_OF_LOAD_PREDEFINED_FUNC(0, CUSTOM_COMMAND_END);
 	}
-
-	g_predefinedFuncLoaded = true;
 
 	return MAKE_RESULT_OF_LOAD_PREDEFINED_FUNC(context.loadedFunctionCount, context.commandBase);
 }
@@ -294,16 +293,16 @@ int LoadCustomFunctions(LoadCustomFunctionsCmdData* commandData) {
 
 		c += strlen(c) + 1;
 	}
-	ReturnData& returnData = commandData->returnData;
-	returnData.sizeOfCustomData = (int)(sizeof(HMODULE) + commandIds.size() * sizeof(CustomCommandId));
+	ReturnData& returnData = commandData->returnData;	
+	returnData.sizeOfCustomData = (int)(sizeof(LoadCustomFunctionsReturnData) - sizeof(LoadCustomFunctionsReturnData::cmdIds) + commandIds.size() * sizeof(CustomCommandId));
 
 	// allocate memory for return data, spy client should be responsible to free the memory after using
-	char* rawData = (char*)malloc(returnData.sizeOfCustomData);
-	returnData.customData = rawData;
+	LoadCustomFunctionsReturnData* pCustomFunctionsReturnData = (LoadCustomFunctionsReturnData*)malloc(returnData.sizeOfCustomData);
+	returnData.customData = (char*)pCustomFunctionsReturnData;
 
-	*((HMODULE*)rawData) = hModule;
-	rawData += sizeof(HMODULE);
-	memcpy_s(rawData, commandIds.size() * sizeof(CustomCommandId), commandIds.data(), commandIds.size() * sizeof(CustomCommandId));
+	pCustomFunctionsReturnData->hModule = hModule;
+	pCustomFunctionsReturnData->moduleId = moduleInfo->moduleId;
+	memcpy_s(&pCustomFunctionsReturnData->cmdIds[0], commandIds.size() * sizeof(CustomCommandId), commandIds.data(), commandIds.size() * sizeof(CustomCommandId));
 
 	return 0;
 }
@@ -314,5 +313,5 @@ int unloadModule(UnloadModuleCmdData* commandData) {
 		return -1;
 	}
 
-	return customFunctionManager.unloadModule((HMODULE)commandData->hModule) ? 0 : 1;
+	return customFunctionManager.unloadModule(commandData->moduleId) ? 0 : 1;
 }

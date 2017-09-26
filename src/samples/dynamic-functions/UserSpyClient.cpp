@@ -40,10 +40,10 @@ bool UserSpyClient::inject(const char* processName) {
 }
 
 bool UserSpyClient::unloadModulesAndStopMonitor() {	
-	HMODULE hModule;
+	ModuleId moduleId;
 	for (auto& elm : _spyLibMap) {
-		hModule = elm.second;
-		if(unloadModule(hModule) != 0) {
+		moduleId = elm.second;
+		if(unloadModule(moduleId) != 0) {
 			cout << "failed to uninject " << elm.first << endl;
 		}
 		else {
@@ -76,7 +76,7 @@ bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
 		}
 	}
 
-	HMODULE module;
+	ModuleId module;
 	list<CustomCommandId> cmdIds;
 
 	int iRes = SpyClient::loadDynamicFunctions(dllFile, functions, functionCount, cmdIds, &module);

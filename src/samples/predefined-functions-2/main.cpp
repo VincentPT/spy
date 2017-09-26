@@ -24,8 +24,14 @@ int main(int argc, char* argv[]) {
 
 	// inject custom spy library which implement predefined functions
 	const char* spyLib = "spylib2.dll";
-	HMODULE hSpyLib;
-	int ret = spyClient.loadPredefinedFunctions(spyLib, &hSpyLib);
+	ModuleId moduleId = INVALID_MODULE_ID;
+	int ret = spyClient.loadPredefinedFunctions(spyLib, &moduleId);
+	if (moduleId == INVALID_MODULE_ID) {
+		spyClient.uninject();
+		cout << "failed to inject predefined spy lib" << endl;
+		return -1;
+	}
+
 	int loadedFunctionCount = GET_NUMBER_OF_LOAD_PREDEFINED_FUNC(ret);
 	CustomCommandId commandBase = GET_BASE_OF_LOAD_PREDEFINED_FUNC(ret);
 
@@ -48,7 +54,7 @@ int main(int argc, char* argv[]) {
 	cout << "injected process path: " << injectedModulePath << endl;
 
 	// uninject the custom lib
-	if (spyClient.unloadModule(hSpyLib) != 0) {
+	if (spyClient.unloadModule(moduleId) != 0) {
 		cout << "failed to uninject " << spyLib << endl;
 	}
 	else {

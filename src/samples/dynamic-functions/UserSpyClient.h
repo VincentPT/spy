@@ -8,7 +8,7 @@
 
 class UserSpyClient : public SpyClient {
 	std::map<std::string,CustomCommandId> _dynamicCmdIdMap;
-	std::map<std::string, HMODULE> _spyLibMap;
+	std::map<std::string, ModuleId> _spyLibMap;
 public:
 	UserSpyClient();
 	~UserSpyClient();

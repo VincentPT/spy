@@ -20,22 +20,23 @@ typedef std::shared_ptr<std::list<CustomCommandId>> CommandListRef;
 
 struct ModuleInfo
 {
-	std::string moduleName;
+	HMODULE hModule;
+	ModuleId moduleId;
+	std::string moduleName;	
 	CommandListRef commandListRef;	
 };
 
 class CustomFunctionManager {
-	typedef std::map<HMODULE, ModuleInfo> ModuleHandleMap;	
-	ModuleHandleMap _moduleHandleMap;
+	typedef std::map<ModuleId, ModuleInfo> ModuleHandleMap;
+	ModuleHandleMap _moduleHandleMap;	
 	std::vector<FunctionInfo> _customFuncs;
-
 public:
 	CustomFunctionManager();
 	virtual ~CustomFunctionManager();
 
 	ModuleInfo* createModuleContainer(HMODULE hModule, const std::string& moduleName);
-	ModuleInfo* getModuleContainer(HMODULE);
-	bool unloadModule(HMODULE);
+	ModuleInfo* getModuleContainer(ModuleId);
+	bool unloadModule(ModuleId);
 
 	const std::string& getFunctionName(CustomCommandId cmdId) const;
 	void* getFunctionAddress(CustomCommandId cmdId) const;

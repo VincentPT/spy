@@ -21,15 +21,15 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	HMODULE hSpyLib;
-	int ret = spyClient.loadPredefinedFunctions("spylib.dll", &hSpyLib);
+	ModuleId spyLibId;
+	int ret = spyClient.loadPredefinedFunctions("spylib.dll", &spyLibId);
 	int loadedFunctionCount = GET_NUMBER_OF_LOAD_PREDEFINED_FUNC(ret);
 	CustomCommandId commandBase = GET_BASE_OF_LOAD_PREDEFINED_FUNC(ret);
 
 	cout << "number of loaded function " << loadedFunctionCount << endl;
 	cout << "custom commands begin at " << commandBase << endl;
 	
-	if (hSpyLib != nullptr && spyClient.unloadModule(hSpyLib) != 0) {
+	if (spyLibId != INVALID_MODULE_ID && spyClient.unloadModule(spyLibId) != 0) {
 		cout << "failed to uninject spylib.dll" << endl;
 	}
 

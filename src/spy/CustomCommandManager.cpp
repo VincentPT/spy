@@ -4,6 +4,7 @@
 using namespace std;
 
 string g_dummyFunctionName;
+static ModuleId g_moduleIdSeed = 0;
 
 CustomFunctionManager::CustomFunctionManager() {
 }
@@ -14,29 +15,31 @@ CustomFunctionManager::~CustomFunctionManager() {
 ModuleInfo* CustomFunctionManager::createModuleContainer(HMODULE hModule, const std::string& moduleName) {
 	ModuleInfo dummy;
 	dummy.moduleName = moduleName;
+	dummy.moduleId = g_moduleIdSeed++;
+	dummy.hModule = hModule;
 
-	auto it = _moduleHandleMap.insert( make_pair(hModule, dummy) );
+	auto it = _moduleHandleMap.insert( make_pair(dummy.moduleId, dummy) );
 	ModuleInfo* pModueInfo = &it.first->second;
 	pModueInfo->commandListRef = make_shared<std::list<CustomCommandId>>();
 	return &(it.first->second);
 }
 
-ModuleInfo* CustomFunctionManager::getModuleContainer(HMODULE hModule) {
-	auto it = _moduleHandleMap.find(hModule);
+ModuleInfo* CustomFunctionManager::getModuleContainer(ModuleId moduleId) {
+	auto it = _moduleHandleMap.find(moduleId);
 	if (it != _moduleHandleMap.end()) {
 		return &(it->second);
 	}
 	return nullptr;
 }
 
-bool CustomFunctionManager::unloadModule(HMODULE hModule) {
-	auto it = _moduleHandleMap.find(hModule);
+bool CustomFunctionManager::unloadModule(ModuleId moduleId) {
+	auto it = _moduleHandleMap.find(moduleId);
 	if (it == _moduleHandleMap.end()) {
 		return false;
 	}
 
 	ModuleInfo& moduleInfo = it->second;
-	if (!FreeLibrary(hModule)) {
+	if (!FreeLibrary(moduleInfo.hModule)) {
 		return false;
 	}
 
