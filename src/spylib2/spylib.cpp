@@ -27,7 +27,7 @@ extern "C" {
 	*	
 	*   getPredefinedFunctionCount should return number predefined function that the user want to loaded to the engine
 	**/
-	SPYLIB_API int __stdcall getPredefinedFunctionCount() {
+	SPYLIB_API int getPredefinedFunctionCount() {
 		return (int)UserCommandId::PredefinedCommandCount;
 	}
 
@@ -43,7 +43,7 @@ extern "C" {
 	*   loadPredefinedFunctions should return zero to the engine know that loaded function should be kept in the engine for using in future
 	*                           or nonzero to notify that the engine should discard the loadding result
 	**/
-	SPYLIB_API int __stdcall loadPredefinedFunctions(void* context, FSetPredefinedFunction fx, CustomCommandId cmdBase) {
+	SPYLIB_API int loadPredefinedFunctions(void* context, FSetPredefinedFunction fx, CustomCommandId cmdBase) {
 		fx(context, (CustomCommandId)UserCommandId::ReadDummyTree, nullptr);
 		fx(context, (CustomCommandId)UserCommandId::GetInjectedProcessName, getProcessPath);
 		return 0;

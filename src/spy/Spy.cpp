@@ -76,7 +76,7 @@ inline CustomCommandId addCustomFunction(void* pFunc, const char* sFunctionName)
 	return customFunctionManager.addCustomFunction(pFunc, sFunctionName);
 }
 
-int __stdcall setCustomFunction(SetPredefinedCommandContext* context, CustomCommandId cmdId, void* pFunc) {
+int setCustomFunction(SetPredefinedCommandContext* context, CustomCommandId cmdId, void* pFunc) {
 	if (context == nullptr) {
 		cout << "setCustomFunction must be call with suppiled context of function " LoadPredefinedFunctionsName << std::endl;
 		return -1;
