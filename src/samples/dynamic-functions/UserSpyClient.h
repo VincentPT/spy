@@ -14,7 +14,7 @@ public:
 	~UserSpyClient();
 
 	bool inject(const char* processName);
-	bool loadDynamicFunctions(const char* dllFile);
+	bool loadDynamicFunctions(const char* dllFile, ModuleId& moduleId);
 	bool unloadModulesAndStopMonitor();
 
 	std::string getInjectedProcessPath();

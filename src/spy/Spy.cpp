@@ -16,6 +16,9 @@ int loadPredifnedFunctions(LoadPredefinedCmdData* param);
 int invokeCustomCommand(CustomCommandCmdData* commandData);
 int LoadCustomFunctions(LoadCustomFunctionsCmdData* commandData);
 int unloadModule(UnloadModuleCmdData* commandData);
+int getFunctionPtr(GetFunctionPtrCmdData* commandData);
+int getModule(GetModuleCmdData* commandData);
+int getModulePath(GetModulePathCmdData* commandData);
 
 // using namespaces
 using namespace std;
@@ -51,11 +54,17 @@ extern "C" {
 			return LoadCustomFunctions((LoadCustomFunctionsCmdData*)param);
 		case CommandId::UNLOAD_MODULE:
 			return unloadModule((UnloadModuleCmdData*)param);
+		case CommandId::GET_CUSTOM_FUNCTION_PTR:
+			return getFunctionPtr((GetFunctionPtrCmdData*)param);
+		case CommandId::GET_MODULE:
+			return getModule((GetModuleCmdData*)param);
+		case CommandId::GET_MODULE_PATH:
+			return getModulePath((GetModulePathCmdData*)param);
 		default:
 			break;
 		}
 
-		return 0;
+		return -1;
 	}
 }
 
@@ -314,4 +323,90 @@ int unloadModule(UnloadModuleCmdData* commandData) {
 	}
 
 	return customFunctionManager.unloadModule(commandData->moduleId) ? 0 : 1;
+}
+
+int getFunctionPtr(GetFunctionPtrCmdData* commandData) {
+	if (commandData->commandSize != sizeof(GetFunctionPtrCmdData)) {
+		cout << "Invalid load custom command" << std::endl;
+		return -1;
+	}
+
+	commandData->ptr = customFunctionManager.getFunctionAddress(commandData->customCommandId);
+	return 0;
+}
+
+int getModule(GetModuleCmdData* commandData) {
+	if (commandData->commandSize != sizeof(GetModuleCmdData)) {
+		cout << "Invalid load custom command" << std::endl;
+		return -1;
+	}
+
+	auto& returnData = commandData->returnData;
+	returnData.customData = nullptr;
+	returnData.sizeOfCustomData = 0;
+	returnData.returnCode = 0;
+
+	auto moduleInfo = customFunctionManager.getModuleContainer(commandData->moduleId);
+	int cmdCount = 0;
+	int rawDataSize = sizeof(ModuleData) - sizeof(ModuleData::cmdIds);
+
+	if (moduleInfo != nullptr) {
+		auto commandListRef = moduleInfo->commandListRef;
+		ModuleData* pModuleData;
+		if (commandListRef) {
+			cmdCount = (int)moduleInfo->commandListRef->size();
+			rawDataSize += cmdCount * sizeof(CustomCommandId);
+
+			pModuleData = (ModuleData*)malloc(rawDataSize);
+			auto pCmdId = pModuleData->cmdIds;
+
+			for (auto it = commandListRef->begin(); it != commandListRef->end(); it++) {
+				*pCmdId++ = *it;
+			}
+		}
+		else {
+			pModuleData = (ModuleData*)malloc(rawDataSize);
+		}
+
+		pModuleData->hModule = moduleInfo->hModule;
+		pModuleData->commandCount = cmdCount;
+		returnData.customData = (char*)pModuleData;
+		returnData.sizeOfCustomData = rawDataSize;
+	}
+
+	return 0;
+}
+
+int getModulePath(GetModulePathCmdData* commandData) {
+	if (commandData->commandSize != sizeof(GetModulePathCmdData)) {
+		cout << "Invalid load custom command" << std::endl;
+		return -1;
+	}
+
+	auto& returnData = commandData->returnData;
+	returnData.customData = nullptr;
+	returnData.sizeOfCustomData = 0;
+	returnData.returnCode = 0;
+
+	auto moduleInfo = customFunctionManager.getModuleContainer(commandData->moduleId);
+	int cmdCount = 0;
+
+	if (moduleInfo != nullptr) {
+
+		HMODULE hModule = moduleInfo->hModule;
+		int bufferSize = MAX_PATH;
+		int rawDataSize = sizeof(ModulePathData) - sizeof(ModulePathData::path) + bufferSize;
+
+		ModulePathData* pModuleData;
+		pModuleData = (ModulePathData*)malloc(rawDataSize);
+
+		pModuleData->hModule = moduleInfo->hModule;
+		pModuleData->bufferSize = bufferSize;
+		GetModuleFileNameA(hModule, pModuleData->path, bufferSize);
+
+		returnData.customData = (char*)pModuleData;
+		returnData.sizeOfCustomData = rawDataSize;
+	}
+
+	return 0;
 }

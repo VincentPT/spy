@@ -60,7 +60,7 @@ bool UserSpyClient::unloadModulesAndStopMonitor() {
 	return true;
 }
 
-bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
+bool UserSpyClient::loadDynamicFunctions(const char* dllFile, ModuleId& moduleId) {
 	const char* functions[] = {
 		GetProcessPath,
 		GetMinElemenInRange,
@@ -75,18 +75,17 @@ bool UserSpyClient::loadDynamicFunctions(const char* dllFile) {
 			return false;
 		}
 	}
-
-	ModuleId module;
+	
 	list<CustomCommandId> cmdIds;
 
-	int iRes = SpyClient::loadDynamicFunctions(dllFile, functions, functionCount, cmdIds, &module);
+	int iRes = SpyClient::loadDynamicFunctions(dllFile, functions, functionCount, cmdIds, &moduleId);
 	if (iRes) {
 		cout << "Cannot load functions in dll file " << dllFile << endl;
 		return false;
 	}
 
 	// store the loaded module 
-	_spyLibMap[dllFile] = module;
+	_spyLibMap[dllFile] = moduleId;
 
 	if (cmdIds.size() != (size_t)functionCount) {
 		cout << "number of command return by loadDynamicFunctions is mismatch with number of function" << dllFile << endl;
