@@ -81,7 +81,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
     stop monitor process albino-mouse.exe successfully
     `
 ## Usage
-    [![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)]
+    [![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)]()
     
     Look at above picture. You can see, the spy framework is included on both side, client side(your application) and host side(a host application which your code will be injected to).
     
