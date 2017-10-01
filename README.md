@@ -124,11 +124,11 @@ they may also must to inject here as dependency dlls.
 The engine will inject the dependency dlls first, then spy-engine.
 Note that, If any dependency dll is missing in the list, the spy dlls cannot be injected.
 
-Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp, API UserSpyClient::inject().
+Reference: ./src/samples/predefined-functions-3/UserSpyClient.cpp, API UserSpyClient::inject().
 
 * Application specific APIs are APIs that use common API of spy client class with your specific data structure
 and handle the output data.
-Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp, API UserSpyClient::getInjectedProcessPath().
+Reference: ./src/samples/predefined-functions-3/UserSpyClient.cpp, API UserSpyClient::getInjectedProcessPath().
 
 ### Write your own spy lib dll.
 There are two types of spy lib dll, predefined commands lib and dynamic commands lib.
@@ -144,12 +144,12 @@ map your command ids with your process function.
 the spy-engine.dll will inject your spy lib into host process and call two APIs in your spy lib
 to load the predefined commands to the engine.
 
-Reference: .\src\spylib3\spylib.cpp
+Reference: ./src/spylib3/spylib.cpp
 
 2. dynamic commands lib.
 this is a shared library that have export APIs with any name that you want as long as they can be access by API
 GetProcAddress.
-Reference: .\user-spy-lib\spylib.cpp
+Reference: ./user-spy-lib/spylib.cpp
 
 The differences between this types are:
 * predefined commands lib have a more complex implementation to setup the spy commands but it is easy to injected
@@ -168,15 +168,15 @@ Go to next sections to learn how to execute injected functions in spy lib in cli
 * inject spy-engine.dll and all dependencies by API SpyClient::inject.
 * inject spy lib and load predefined comamnds by SpyClient::loadPredefinedFunctions
 * store comamnd id base to access the injected command in future.
-Reference: .\src\samples\predefined-functions-3\main.cpp
+Reference: ./src/samples/predefined-functions-3/main.cpp
 
 2. For dynamic commands lib.
 * inject spy-engine.dll and all dependencies by API SpyClient::inject.
 * prepare function name array.
 * inject spy lib and load dynamic comamnds by SpyClient::loadDynamicFunctions
 * store and manage dynamic comamnd ids return by loadDynamicFunctions to access the injected command in future.
-Reference:  .\src\samples\dynamic-functions\main.cpp
-            .\src\samples\dynamic-functions\UserSpyClient.cpp
+Reference:  ./src/samples/dynamic-functions/main.cpp
+            ./src/samples/dynamic-functions/UserSpyClient.cpp
 
 ### Execute injected functions.
 Generaly, the injected functions can be executed via spy-engine by supplying corresponding dynamic command id with
@@ -187,12 +187,12 @@ executeCommandAndFreeCustomData and executeCommand.
 * For predefined commands lib, the dynamic command can be computed by store the command id base returned by API
 SpyClient::loadPredefinedFunctions by formular: <static command id> + <command id base>
 
-Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp
+Reference: ./src/samples/predefined-functions-3/UserSpyClient.cpp
 
 * For dynamic commands lib, you should map the function name with the dynamic comamnd id return by API 
 SpyClient::loadDynamicFunctions, the get the dynamic comamnd id by using function name via mapper.
 
-Reference: .\src\samples\dynamic-functions\UserSpyClient.cpp
+Reference: ./src/samples/dynamic-functions/UserSpyClient.cpp
 
 ## Best practice.
 For visualize debuging purpose. Check and see the [Buzz](https://github.com/VincentPT/buzz) application.
@@ -231,8 +231,8 @@ _**Note that, if you use pointer in spy client, you must enure that data that th
 host process.**_
 
 for more detail prefer to: 
-.\src\spylib2\spylib.cpp, API: showArguments
-.\src\samples\predefined-functions-2\UserSpyClient.cpp, API: showArguments
+./src/spylib2/spylib.cpp, API: showArguments
+./src/samples/predefined-functions-2/UserSpyClient.cpp, API: showArguments
 
 2. Use debug spy dlls in to inject to a release build mode host process and vice versa.
 This may lead to a crash issue.
