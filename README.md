@@ -206,18 +206,21 @@ this is cause of wrong calling convention is lead to crash issues in the host ap
 In order to avoid that, follow bellow rules.
 
 **spy lib and spy client argument type mapping table**
+
 Spy lib | Spy client
-------- | -------------
+------- | ----------
 l-value | l-value
 r-value | pointer
 poiner | pointer
 
 **support data type in x86 platform:**
+
 * all r-value and pointer data types
 * any l-value data type that size of type is not greater than 4 bytes.
 * not support l-value of float, double and class data type.
 
 **support data type in x64 platform:**
+
 * all r-value and pointer data types
 * any l-value data type that size of type is not greater than 8 bytes.
 * not support l-value of float and double and class data type.
@@ -225,6 +228,7 @@ poiner | pointer
 In case you want to use a data type that the framework does not support, change it to r-value type or pointer type.
 
 **The spy-engine supports maxium 8 arguments in an API.**
+
 In case you want to use more than 8 argument, just push them in to a structure.
 
 _**Note that, if you use pointer in spy client, you must enure that data that the pointer point to must be available in
