@@ -83,7 +83,8 @@ This is a spy framework that allows to inject your dlls into a host process and 
 ## Usage
 [![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)]
     
-    The best way to learn how to work with the spy framework in your code is look at samples. That is more detail and clear than explain by words.
+    The best way to learn how to work with the spy framework in your code is look at samples. That is more detail and
+    clear than explain by words.
     This section will talk about general ideas to use the framework.
     
     Look at above picture. You can see, the spy framework is included on both side, client side(your application)
@@ -98,8 +99,8 @@ This is a spy framework that allows to inject your dlls into a host process and 
     
     Each part have their own reponsibility base on its side.
     Client side works with your application and take reponsibility to forward client request to spy-engine run in host process.
-    Host side works with host process, it can access host memory and code. It base on the input and also combine with host's context to
-    process the data and return to spy client.
+    Host side works with host process, it can access host memory and code. It base on the input and also combine with
+    host's context to process the data and return to spy client.
     
     Overall, there are some main steps to write your spy application using the framework.
         
@@ -178,9 +179,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
                         .\src\samples\dynamic-functions\UserSpyClient.cpp
 
 ## Best practice.
-    For visualize debuging purpose. Check and see the buzz application.
-https://github.com/VincentPT/buzz - automatic!
-[Buzz](https://github.com/VincentPT/buzz)
+    For visualize debuging purpose. Check and see the [Buzz](https://github.com/VincentPT/buzz) application.
     
 ## Known Issues
     1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
