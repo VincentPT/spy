@@ -178,18 +178,70 @@ Reference: .\src\samples\predefined-functions-3\main.cpp
 Reference:  .\src\samples\dynamic-functions\main.cpp
             .\src\samples\dynamic-functions\UserSpyClient.cpp
 
+### Execute injected functions.
+Generaly, the injected functions can be executed via spy-engine by supplying corresponding dynamic command id with
+the injected function and arguments supplied by the client side must same as spy lib.
+there are two utility functions that can be used are.
+executeCommandAndFreeCustomData and executeCommand.
+
+* For predefined commands lib, the dynamic command can be computed by store the command id base returned by API
+SpyClient::loadPredefinedFunctions by formular: <static command id> + <command id base>
+
+Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp
+
+* For dynamic commands lib, you should map the function name with the dynamic comamnd id return by API 
+SpyClient::loadDynamicFunctions, the get the dynamic comamnd id by using function name via mapper.
+
+Reference: .\src\samples\dynamic-functions\UserSpyClient.cpp
+
 ## Best practice.
 For visualize debuging purpose. Check and see the [Buzz](https://github.com/VincentPT/buzz) application.
-    
+
+for more details of executing injected function by spy client check the section #1 in [Known Issues] bellow.
+
 ## Known Issues
-1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
+1. Passing incompatible arguments with spy lib to the spy client.
+this is cause of wrong calling convention is lead to crash issues in the host application.
+
+In order to avoid that, follow bellow rules.
+
+**spy lib and spy client argument type mapping table**
+Spy lib | Spy client
+------------ | -------------
+l-value | l-value
+r-value | pointer
+poiner | pointer
+
+**support data type in x86 platform:**
+* all r-value and pointer data types
+* any l-value data type that size of type is not greater than 4 bytes.
+* not support l-value of float, double and class data type.
+
+**support data type in x64 platform:**
+* all r-value and pointer data types
+* any l-value data type that size of type is not greater than 8 bytes.
+* not support l-value of float and double and class data type.
+
+In case you want to use a data type that the framework does not support, change it to r-value type or pointer type.
+
+**The spy-engine supports maxium 8 arguments in an API.**
+In case you want to use more than 8 argument, just push them in to a structure.
+
+_**Note that, if you use pointer in spy client, you must enure that data that the pointer point to must be available in
+host process.**_
+
+for more detail prefer to: 
+.\src\spylib2\spylib.cpp, API: showArguments
+.\src\samples\predefined-functions-2\UserSpyClient.cpp, API: showArguments
+
+2. Use debug spy dlls in to inject to a release build mode host process and vice versa.
 This may lead to a crash issue.
 
-2. Inject dll while the host application is paused by debugging in Visual Studio.
+3. Inject dll while the host application is paused by debugging in Visual Studio.
 It's ok for Win32 host application. But for console host application the spy application will hang up.
 It's is blocked until the host process resume.
 
-3. The spy lib is uninjected from host process while the spy-engine don't know.
+4. The spy lib is uninjected from host process while the spy-engine don't know.
 For some reason(may be external factors or using the spy engine in incorrect way) the engine don't know
 the spy lib was already uninjected from the host process and still execute command by requests from spy client.
 This is lead to execute a code that is no longer belong to the process and the host process will be crashed.

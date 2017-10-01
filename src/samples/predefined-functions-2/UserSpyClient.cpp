@@ -59,3 +59,50 @@ bool UserSpyClient::readDummyTree(void* address, std::string& result) {
 	}
 	return iRes == 0;
 }
+
+int UserSpyClient::showArguments(char a, short b, int c, __int64 d, float& e, double f, const DummyStruct& g) {
+	auto handler = [](ReturnData& returnData) {
+	};
+
+	list<void*> allocatedBuffer;
+	ScopeAutoFunction autoFreeRemoteData([&allocatedBuffer, this]() {
+		for (auto it = allocatedBuffer.begin(); it != allocatedBuffer.end(); it++) {
+			if (*it) {
+				freeRemoteBuffer(*it);
+			}
+		}
+	});
+
+	// build arguments before execute remote command
+	void* ra = (void*)a;
+	void* rb = (void*)b;
+	void* rc = (void*)(size_t)c;
+#ifdef _M_X64
+	void* rd = (void*)d;
+#else
+	void* rd = cloneBufferToRemoteProcess(this, d);
+	if (rd == nullptr) return -1;
+	allocatedBuffer.push_back(rd);
+#endif // _M_X64
+	void* re = cloneBufferToRemoteProcess(this, e);
+	if (re == nullptr) return -1;
+	allocatedBuffer.push_back(re);
+
+	void* rf = cloneBufferToRemoteProcess(this, f);
+	if (rf == nullptr) return -1;
+	allocatedBuffer.push_back(rf);
+
+	void* rg = cloneBufferToRemoteProcess(this, g);
+	if (rg == nullptr) return -1;
+	allocatedBuffer.push_back(rg);
+
+	int iRes = executeCommandAndFreeCustomData(this, (CustomCommandId)UserCommandId::ShowArguments + _predefinedBase, handler,
+		ra, rb, rc, rd, re, rf, rg);
+	if (iRes) {
+		cout << "Error: command showArguments return error!" << endl;
+	}
+
+	readDataFromRemoteProcess(re, &e, sizeof(e));
+
+	return iRes;
+}

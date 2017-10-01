@@ -47,11 +47,20 @@ int main(int argc, char* argv[]) {
 	bool blRes = spyClient.readDummyTree(nullptr, treeStr);
 	if (blRes) {
 		cout << "Dummy tree: " << treeStr << endl;
-	}	
+	}
 
 	// call the second command in remote process
 	string injectedModulePath = spyClient.getInjectedProcessPath();
 	cout << "injected process path: " << injectedModulePath << endl;
+
+	// call the third command in remote process
+	float e = 4.0f;
+	if (spyClient.showArguments(0, 1, 2, 3, e, 5.0f, { 6, 7 })) {
+		cout << "showArguments returns an error" << endl;
+	}
+	else {
+		cout << "f was changed to " << e << endl;
+	}
 
 	// uninject the custom lib
 	if (spyClient.unloadModule(moduleId) != 0) {

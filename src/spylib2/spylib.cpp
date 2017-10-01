@@ -19,6 +19,32 @@ ReturnData __cdecl getProcessPath() {
 
 	return returnData;
 }
+#ifdef _M_X64
+ReturnData __cdecl showArguments(char a, short b, int c, __int64 d, float& e, const double* f, DummyStruct& g) {
+#else
+ReturnData __cdecl showArguments(char a, short b, int c, __int64& d, float& e, const double* f, DummyStruct& g) {
+#endif //_M_X64
+	
+	// print the arguments value
+	cout << __FUNCTION__ " is called with following arguments:" << endl;
+	cout << "a =" << (int)a << endl;
+	cout << "b =" << b << endl;
+	cout << "c =" << c << endl;
+	cout << "d =" << d << endl;
+	cout << "e =" << e << endl;
+	cout << "f =" << *f << endl;
+	cout << "g = {" << g.val1 << ", " << g.val2 << "}" << endl;
+
+	// change one value
+	e = 1234.0f;
+
+	ReturnData returnData;
+	returnData.sizeOfCustomData = 0;
+	returnData.customData = nullptr;
+	returnData.returnCode = 0;
+
+	return returnData;
+}
 
 extern "C" {
 
@@ -46,6 +72,7 @@ extern "C" {
 	SPYLIB_API int loadPredefinedFunctions(void* context, FSetPredefinedFunction fx, CustomCommandId cmdBase) {
 		fx(context, (CustomCommandId)UserCommandId::ReadDummyTree, nullptr);
 		fx(context, (CustomCommandId)UserCommandId::GetInjectedProcessName, getProcessPath);
+		fx(context, (CustomCommandId)UserCommandId::ShowArguments, showArguments);
 		return 0;
 	}
 }

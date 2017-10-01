@@ -16,4 +16,5 @@ public:
 	bool inject(const char* processName);
 	std::string getInjectedProcessPath();
 	bool readDummyTree(void* address, std::string& result);
+	int showArguments(char a, short b, int c, __int64 d, float& e, double f, const DummyStruct& g);
 };
