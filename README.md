@@ -201,7 +201,7 @@ for more details of executing injected function by spy client check the section 
 
 ## Known Issues
 1. Passing incompatible arguments with spy lib to the spy client.
-this is cause of wrong calling convention is lead to crash issues in the host application.
+this is cause of wrong calling convention will lead to crash issues in the host application.
 
 In order to avoid that, follow bellow rules.
 
