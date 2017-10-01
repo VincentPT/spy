@@ -83,24 +83,114 @@ This is a spy framework that allows to inject your dlls into a host process and 
 ## Usage
 [![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)]
     
-    Look at above picture. You can see, the spy framework is included on both side, client side(your application) and host side(a host application which your code will be injected to).
+    The best way to learn how to work with the spy framework in your code is look at samples. That is more detail and clear than explain by words.
+    This section will talk about general ideas to use the framework.
+    
+    Look at above picture. You can see, the spy framework is included on both side, client side(your application)
+    and host side(a host application which your code will be injected to).
     
     The framework can be split into two parts:
-        * The engine are spy client class and spy-engine.dll, they are corressponding together.
-        * The user specific part: User Spy client class and User Spy Lib.dll. They are also corressponding together.
+        * The engine are spy client class and spy-engine.dll.
+        * The user specific part: User Spy client class and User Spy Lib.dll.
     
-    The spy client and Spy engine are designed to respond all common spy tasks while User Spy Client and User Spy lib are designed to implement specific tasks for your application.
+    The spy client and Spy engine are designed to respond all common spy tasks while User Spy Client and
+    User Spy lib are designed to implement specific tasks for your application.
     
-    So, in the most cases, you need to modify the user specific part.
-    Ofcourse, incase the the core engine is not match your requirements, you also need to modify it.
+    Each part have their own reponsibility base on its side.
+    Client side works with your application and take reponsibility to forward client request to spy-engine run in host process.
+    Host side works with host process, it can access host memory and code. It base on the input and also combine with host's context to
+    process the data and return to spy client.
     
-    
+    Overall, there are some main steps to write your spy application using the framework.
+        
     The main steps of programming spy application using spy framework is.
     1. Write your own spy client class inherit from SpyClient class with your specific API.
     2. Write your own spy lib dll project which will executes your specific on host process and return data to your spy client APIs.
     3. Write the code to inject the spy-engine.dll and loads your APIs in spy lib dll into host process.
     4. Write the code the call the spy client API and process the return data.
     
+    ### Write Your Spy Client class.
+        There are two main parts for a user spy client class is:
+        1. Injection API.
+        2. Application specific APIs.
+        
+        * Injection API is a placed you can write the code to inject the spy-engine.dll, your spy lib.
+        Here, you should specify the full path of spy-engine.dll in case it does not present
+        at the same folder of host application or system default shared library foders.
+        And one important things is, if your spy lib or even your modified spy-engine.dll use 3rd party dlls,
+        they may also must to inject here as dependency dlls.
+        
+        The engine will inject the dependency dlls first, then spy-engine.
+        Note that, If any dependency dll is missing in the list, the spy dlls cannot be injected.
+        
+        Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp, API UserSpyClient::inject().
+        
+        * Application specific APIs are APIs that use common API of spy client class with your specific data structure
+        and handle the output data.
+        Reference: .\src\samples\predefined-functions-3\UserSpyClient.cpp, API UserSpyClient::getInjectedProcessPath().
     
+    ### Write your own spy lib dll.
+        There are two types of spy lib dll, predefined commands lib and dynamic commands lib.
+        You can choose one of them or both to implement your spy libs in the same application.
+        
+        1. predefined commands lib.
+            this a shared library that must have two export APIs.
+            getPredefinedFunctionCount and loadPredefinedFunctions.
+            
+            API getPredefinedFunctionCount must return number of your commands in the spy lib while loadPredefinedFunctions
+            map your command ids with your process function.
+            
+            the spy-engine.dll will inject your spy lib into host process and call two APIs in your spy lib
+            to load the predefined commands to the engine.
+            
+            Reference: .\src\spylib3\spylib.cpp
+            
+        2. dynamic commands lib.
+            this is a shared library that have export APIs with any name that you want as long as they can be access by API
+            GetProcAddress.
+            Reference: .\user-spy-lib\spylib.cpp
+
+        The differences between this types are:
+            * predefined commands lib have a more complex implementation to setup the spy commands but it is easy to injected
+            the spy lib in client side while dynamic commands lib have a easier implementation but in client side, it is more
+            complext to inject the spy commands and manage them.
+            
+            * predefined commands lib map spy functions to static command ids.
+            * dynamic commands lib not map any thing, it is just supplied the spy functions. The client side will have reponsibility
+            to map the functions(access by name) to dynamic command ids. And client side must manage these dynamic ids to access the
+            spy functions.
+    
+        Go to next sections to learn how to execute injected functions in spy lib in client side.
+    
+    ### Inject the spy-engine and spy libs.
+        1. For predefined commands lib.
+            * inject spy-engine.dll and all dependencies by API SpyClient::inject.
+            * inject spy lib and load predefined comamnds by SpyClient::loadPredefinedFunctions
+            * store comamnd id base to access the injected command in future.
+            Reference: .\src\samples\predefined-functions-3\main.cpp
+
+        2. For dynamic commands lib.
+            * inject spy-engine.dll and all dependencies by API SpyClient::inject.
+            * prepare function name array.
+            * inject spy lib and load dynamic comamnds by SpyClient::loadDynamicFunctions
+            * store and manage dynamic comamnd ids return by loadDynamicFunctions to access the injected command in future.
+            Reference:  .\src\samples\dynamic-functions\main.cpp
+                        .\src\samples\dynamic-functions\UserSpyClient.cpp
+
+## Best practice.
+    For visualize debuging purpose. Check and see the buzz application.
+    https://github.com/VincentPT/buzz - automatic!
+    [Buzz](https://github.com/VincentPT/buzz)
     
 ## Known Issues
+    1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
+        This may lead to a crash issue.
+        
+    2. Inject dll while the host application is paused by debugging in Visual Studio.
+        It's ok for Win32 host application. But for console host application the spy application will hang up.
+        It's is blocked until the host process resume.
+        
+    3. The spy lib is uninjected from host process while the spy-engine don't know.
+        For some reason(may be external factors or using the spy engine in incorrect way) the engine don't know
+        the spy lib was already uninjected from the host process and still execute command by requests from spy client.
+        This is lead to execute a code that is no longer belong to the process and the host process will be crashed.
