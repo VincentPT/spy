@@ -45,7 +45,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
     Example of running predefined-functions-3.exe with albino-mouse.exe(for release binaries)
     
     albino-mouse.exe's console:
-    `
+    ```
     >albino-mouse.exe
     generated array: {10,8,6,3,-2,10,4,10,}
     press any key to exit
@@ -58,10 +58,10 @@ This is a spy framework that allows to inject your dlls into a host process and 
     current process path: E:\Projects\spy\src\buid\bin\release\albino-mouse.exe
     deallocated buffer:00671E58
     find min elemen in range[0, 6] from array {10,8,6,3,-2,10,4,10,}
-    `
+    ```
     
     predefined-functions-3.exe's console:
-    `
+    ```
     > predefined-functions-3.exe albino-mouse.exe
     monitor process albino-mouse.exe started!
     getModulePath return: modulePath = E:\Projects\spy\src\buid\bin\release\spylib3.dll
@@ -79,9 +79,9 @@ This is a spy framework that allows to inject your dlls into a host process and 
     min element in range [0, 6] is 3
     uninjected module from remote process spylib3.dll
     stop monitor process albino-mouse.exe successfully
-    `
+    ```
 ## Usage
-[![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)]
+![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)
     
     The best way to learn how to work with the spy framework in your code is look at samples. That is more detail and
     clear than explain by words.
@@ -179,7 +179,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
                         .\src\samples\dynamic-functions\UserSpyClient.cpp
 
 ## Best practice.
-    For visualize debuging purpose. Check and see the [Buzz](https://github.com/VincentPT/buzz) application.
+    For visualize debuging purpose. Check and see the [Buzz!](https://github.com/VincentPT/buzz) application.
     
 ## Known Issues
     1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
