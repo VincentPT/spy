@@ -16,7 +16,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
     * CMake 3.2 or above
 
 ### Install development environment
-    Nothing special. CMake for generate project files and Visual studio for coding.
+    Nothing special. CMake for generating project files and Visual studio for coding.
     
 ## Build.
     There are two created script files to generate project for Visual studio 2015 placed in folder ./src/buid
@@ -179,8 +179,8 @@ This is a spy framework that allows to inject your dlls into a host process and 
 
 ## Best practice.
     For visualize debuging purpose. Check and see the buzz application.
-    https://github.com/VincentPT/buzz - automatic!
-    [Buzz](https://github.com/VincentPT/buzz)
+https://github.com/VincentPT/buzz - automatic!
+[Buzz](https://github.com/VincentPT/buzz)
     
 ## Known Issues
     1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
