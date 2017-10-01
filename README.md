@@ -236,9 +236,9 @@ In case you want to use more than 8 argument, just push them in to a structure.
 _**Note that, if you use pointer in spy client, you must enure that data that the pointer point to must be available in
 host process.**_
 
-for more detail prefer to: 
-.\src\spylib2\spylib.cpp, API: showArguments
-.\src\samples\predefined-functions-2\UserSpyClient.cpp, API: showArguments
+for more detail prefer to:
+    .\src\spylib2\spylib.cpp, API: showArguments
+    .\src\samples\predefined-functions-2\UserSpyClient.cpp, API: showArguments
 
 2. Use debug spy dlls in to inject to a release build mode host process and vice versa.
 This may lead to a crash issue.
