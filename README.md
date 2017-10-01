@@ -207,7 +207,7 @@ In order to avoid that, follow bellow rules.
 
 **spy lib and spy client argument type mapping table**
 Spy lib | Spy client
------------- | -------------
+------- | -------------
 l-value | l-value
 r-value | pointer
 poiner | pointer
