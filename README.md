@@ -44,42 +44,42 @@ This is a spy framework that allows to inject your dlls into a host process and 
     
     Example of running predefined-functions-3.exe with albino-mouse.exe(for release binaries)
     
-    albino-mouse.exe's console:
-    ```
-    >albino-mouse.exe
-    generated array: {10,8,6,3,-2,10,4,10,}
-    press any key to exit
-    Invalid function address
-    Command 1 loaded!
-    Command 2 loaded!
-    deallocated buffer:00672F98
-    deallocated buffer:00671E58
-    deallocated buffer:00675B78
-    current process path: E:\Projects\spy\src\buid\bin\release\albino-mouse.exe
-    deallocated buffer:00671E58
-    find min elemen in range[0, 6] from array {10,8,6,3,-2,10,4,10,}
-    ```
-    
-    predefined-functions-3.exe's console:
-    ```
-    > predefined-functions-3.exe albino-mouse.exe
-    monitor process albino-mouse.exe started!
-    getModulePath return: modulePath = E:\Projects\spy\src\buid\bin\release\spylib3.dll
-    getModulePath return: hModule = 0x50F00000
-    getModuleData return:
-        1 <--> 50f01490
-        2 <--> 50f01330
-    number of loaded function 2
-    custom commands begin at 0
-    injected process path: E:\Projects\spy\src\buid\bin\release\albino-mouse.exe
-    Now, try to find a min element in a range from an array in the remote process
-    input a range [min, max]
-    min:0
-    max:6
-    min element in range [0, 6] is 3
-    uninjected module from remote process spylib3.dll
-    stop monitor process albino-mouse.exe successfully
-    ```
+albino-mouse.exe's console:
+```
+>albino-mouse.exe
+generated array: {10,8,6,3,-2,10,4,10,}
+press any key to exit
+Invalid function address
+Command 1 loaded!
+Command 2 loaded!
+deallocated buffer:00672F98
+deallocated buffer:00671E58
+deallocated buffer:00675B78
+current process path: E:\Projects\spy\src\buid\bin\release\albino-mouse.exe
+deallocated buffer:00671E58
+find min elemen in range[0, 6] from array {10,8,6,3,-2,10,4,10,}
+```
+
+predefined-functions-3.exe's console:
+```
+> predefined-functions-3.exe albino-mouse.exe
+monitor process albino-mouse.exe started!
+getModulePath return: modulePath = E:\Projects\spy\src\buid\bin\release\spylib3.dll
+getModulePath return: hModule = 0x50F00000
+getModuleData return:
+    1 <--> 50f01490
+    2 <--> 50f01330
+number of loaded function 2
+custom commands begin at 0
+injected process path: E:\Projects\spy\src\buid\bin\release\albino-mouse.exe
+Now, try to find a min element in a range from an array in the remote process
+input a range [min, max]
+min:0
+max:6
+min element in range [0, 6] is 3
+uninjected module from remote process spylib3.dll
+stop monitor process albino-mouse.exe successfully
+```
 ## Usage
 ![Spy Framework](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework2.PNG)
     
