@@ -179,7 +179,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
                         .\src\samples\dynamic-functions\UserSpyClient.cpp
 
 ## Best practice.
-    For visualize debuging purpose. Check and see the [Buzz!](https://github.com/VincentPT/buzz) application.
+    For visualize debuging purpose. Check and see the ![Buzz](https://github.com/VincentPT/buzz) application.
     
 ## Known Issues
     1. Use debug spy dlls in to inject to a release build mode host process and vice versa.
