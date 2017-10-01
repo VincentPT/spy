@@ -200,7 +200,9 @@ For visualize debuging purpose. Check and see the [Buzz](https://github.com/Vinc
 for more details of executing injected function by spy client check the section #1 in [Known Issues] bellow.
 
 ## Known Issues
+
 1. Passing incompatible arguments with spy lib to the spy client.
+
 this is cause of wrong calling convention is lead to crash issues in the host application.
 
 In order to avoid that, follow bellow rules.
