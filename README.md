@@ -232,8 +232,8 @@ _**Note that, if you use pointer in spy client, you must enure that data that th
 host process.**_
 
 for more detail prefer to: 
-./src/spylib2/spylib.cpp, API: showArguments
-./src/samples/predefined-functions-2/UserSpyClient.cpp, API: showArguments
+ ./src/spylib2/spylib.cpp, API: showArguments
+ ./src/samples/predefined-functions-2/UserSpyClient.cpp, API: showArguments
 
 2. Use debug spy dlls in to inject to a release build mode host process and vice versa.
 This may lead to a crash issue.
