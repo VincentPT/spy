@@ -201,39 +201,39 @@ for more details of executing injected function by spy client check the section 
 
 ## Known Issues
 1. Passing incompatible arguments with spy lib to the spy client.
-this is cause of wrong calling convention will lead to crash issues in the host application.
+    this is cause of wrong calling convention will lead to crash issues in the host application.
 
-In order to avoid that, follow bellow rules.
+    In order to avoid that, follow bellow rules.
 
-**spy lib and spy client argument type mapping table**
+    **spy lib and spy client argument type mapping table**
 
-Spy lib | Spy client
-------- | ----------
-l-value | l-value
-r-value | pointer
-poiner | pointer
+    Spy lib | Spy client
+    ------- | ----------
+    l-value | l-value
+    r-value | pointer
+    poiner | pointer
 
-**support data type in x86 platform:**
-* all r-value and pointer data types
-* any l-value data type that size of type is not greater than 4 bytes.
-* not support l-value of float, double and class data type.
+    **support data type in x86 platform:**
+    * all r-value and pointer data types
+    * any l-value data type that size of type is not greater than 4 bytes.
+    * not support l-value of float, double and class data type.
 
-**support data type in x64 platform:**
-* all r-value and pointer data types
-* any l-value data type that size of type is not greater than 8 bytes.
-* not support l-value of float and double and class data type.
+    **support data type in x64 platform:**
+    * all r-value and pointer data types
+    * any l-value data type that size of type is not greater than 8 bytes.
+    * not support l-value of float and double and class data type.
 
-In case you want to use a data type that the framework does not support, change it to r-value type or pointer type.
+    In case you want to use a data type that the framework does not support, change it to r-value type or pointer type.
 
-**The spy-engine supports maxium 8 arguments in an API.**
-In case you want to use more than 8 argument, just push them in to a structure.
+    **The spy-engine supports maxium 8 arguments in an API.**
+    In case you want to use more than 8 argument, just push them in to a structure.
 
-_**Note that, if you use pointer in spy client, you must enure that data that the pointer point to must be available in
-host process.**_
+    _**Note that, if you use pointer in spy client, you must enure that data that the pointer point to must be available in
+    host process.**_
 
-for more detail prefer to: 
- ./src/spylib2/spylib.cpp, API: showArguments
- ./src/samples/predefined-functions-2/UserSpyClient.cpp, API: showArguments
+    for more detail prefer to:
+     ./src/spylib2/spylib.cpp, API: showArguments
+     ./src/samples/predefined-functions-2/UserSpyClient.cpp, API: showArguments
 
 2. Use debug spy dlls in to inject to a release build mode host process and vice versa.
 This may lead to a crash issue.
