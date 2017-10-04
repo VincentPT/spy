@@ -242,16 +242,16 @@ This may lead to a crash issue.
 The spy application may hang up due to when a break point is reached, Visual studio will pause suppend all threads in the application and the inject code is also suppended. So, the spy application may hangup.
 
 There two ways to avoid that.
-* just resume the host application.
-* Incase, your injecting code should be executed while the scope of reached break point is still alive.
-  Example: your injecting code need to read an local object of the scope through its pointer.
-  
-  There is a work around way. In Visual Studio, open the Threads windows when a break point's reached on host application.
-  You will see a yellow arrow indicate the current thread, right click on that thread and freeze it to keep the thread pause at current thread then click resume button on Visual Studio to resume the other threads.
-  So, now your injected code will be executed while the target thread is stay still.
-  But, we need to continue debugging the thread or resume it, How we can do that?
-  Just hit 'Break All' in pausing icon button then right click on the freezed thread and 'thaw' it.
-  Now you can resume or continue debugging at the thread.
+    * just resume the host application.
+    * Incase, your injecting code should be executed while the scope of reached break point is still alive.
+      Example: your injecting code need to read an local object of the scope through its pointer.
+
+      There is a work around way. In Visual Studio, open the Threads windows when a break point's reached on host application.
+      You will see a yellow arrow indicate the current thread, right click on that thread and freeze it to keep the thread pause at current thread then click resume button on Visual Studio to resume the other threads.
+      So, now your injected code will be executed while the target thread is stay still.
+      But, we need to continue debugging the thread or resume it, How we can do that?
+      Just hit 'Break All' in pausing icon button then right click on the freezed thread and 'thaw' it.
+      Now you can resume or continue debugging at the thread.
 
 4. The spy lib is uninjected from host process while the spy-engine don't know.
 For some reason(may be external factors or using the spy engine in incorrect way) the engine don't know
