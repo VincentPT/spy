@@ -8,7 +8,7 @@ This is a spy framework that allows to inject your dlls into a host process and 
 [![Spy Framework Overview](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework.PNG)](https://github.com/VincentPT/spy)
 
 For the main purpose of visualize debuging in a project in development stage, the spy engine was created.
-Besides that, we can also use the Framework for bug fixing while the host process is running, spying or even hacking.
+Besides that, we can also use the Framework for bug fixing, spying or even hacking while the host process is running.
 
 ### Prerequisites
 * Windows (only support for Window)
