@@ -1,5 +1,5 @@
 # spy
-An injection engine allows to inject code in dlls into a host process and support invoke the code from your application.
+An injection engine allows to inject code in dlls into a host process and supports invoking the code from your application.
 
 ## Overview
 [![Spy Framework Overview](https://github.com/VincentPT/spy/blob/master/doc/images/SpyFramework.PNG)](https://github.com/VincentPT/spy)
