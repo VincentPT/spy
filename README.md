@@ -1,5 +1,5 @@
 # spy
-A spy framework.
+An injection engine.
 
 ## Getting Started
 This is a spy framework that allows to inject your dlls into a host process and also execute the code in your application.
